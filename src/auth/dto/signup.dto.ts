@@ -11,12 +11,12 @@ export class SignUpDto {
 
   @IsString()
   emailToken: string;
-  
+
   @IsNotEmpty()
   @IsString()
   @MinLength(6, { message: 'Password must be at least 6 characters long' })
   password: string;
-  
+
   @IsNotEmpty()
   @IsString()
   create_at: Date;

@@ -4,7 +4,9 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-
+import { PostModule } from './post/post.module';
+import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module';
+import { join } from 'path';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -16,13 +18,15 @@ import { AuthModule } from './auth/auth.module';
       database: 'blog',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
-      logging:true
+      logging: true,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '../uploads'), 
+      serveRoot: '/uploads/' 
     }),
     UsersModule,
     AuthModule,
-   
-   
-  
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,32 +1,37 @@
-
-import { Column, Entity, PrimaryGeneratedColumn ,CreateDateColumn} from 'typeorm';
-
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  OneToMany,
+} from 'typeorm';
+import { Post } from '../../post/entities/post.entity';
 @Entity('users')
 export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    id: number;
-  
-    @Column()
-    name: string;
-   
+  @Column()
+  name: string;
 
-    @Column({ unique: true })
-    email: string;
+  @Column({ unique: true })
+  email: string;
 
-    @Column({ nullable: true })
-    emailToken: string;
-  
+  @Column({ nullable: true })
+  emailToken: string;
 
-    @Column({ nullable: true })
-    newPasswordToken:string;
+  @Column({ nullable: true })
+  newPasswordToken: string;
 
-    @Column()
-    password: string;
+  @Column()
+  password: string;
 
-    @Column({ default: false })
-    verify:boolean;
+  @OneToMany(() => Post, (post) => post.User)
+  posts: Post[];
 
-    @CreateDateColumn({ nullable: true })
-    create_at: Date;
+  @Column({ default: false })
+  verify: boolean;
+
+  @CreateDateColumn({ nullable: true })
+  create_at: Date;
 }

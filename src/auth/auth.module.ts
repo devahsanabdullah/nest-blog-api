@@ -9,8 +9,6 @@ import { User } from 'src/users/entities/user.entity';
 import { JwtStrategy } from './jwt.strategy';
 
 @Module({
- 
-
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
@@ -27,9 +25,9 @@ import { JwtStrategy } from './jwt.strategy';
     }),
     TypeOrmModule.forFeature([User]),
   ],
-  
+
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy,ConfigService],
+  providers: [AuthService, JwtStrategy, ConfigService],
   exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}
