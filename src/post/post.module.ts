@@ -8,10 +8,13 @@ import { join } from 'path';
 
 import { User } from 'src/users/entities/user.entity';
 @Module({
-  imports: [TypeOrmModule.forFeature([Post,User]), ServeStaticModule.forRoot({
-    rootPath: join(__dirname, '..', '../uploads'), 
-    serveRoot: '/uploads/' 
-  }),],
+  imports: [
+    TypeOrmModule.forFeature([Post, User]),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '../uploads'),
+      serveRoot: '/uploads/',
+    }),
+  ],
   controllers: [PostController],
   providers: [PostService],
 })

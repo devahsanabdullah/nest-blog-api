@@ -9,46 +9,64 @@ import { existsSync, unlinkSync } from 'fs';
 import { promises as fsPromises } from 'fs';
 @Injectable()
 export class PostService {
-constructor(@InjectRepository(Post) private readonly usePostRepository:Repository<Post> ){}
- async create(createPostDto: CreatePostDto,user:any) {
-    const blog =  this.usePostRepository.create({...createPostDto,  User:user,});
-  
+  constructor(
+    @InjectRepository(Post)
+    private readonly usePostRepository: Repository<Post>,
+  ) {}
+  async create(createPostDto: CreatePostDto, user: any) {
+    const blog = this.usePostRepository.create({
+      ...createPostDto,
+      User: user,
+    });
+
     try {
       await blog.save();
-  } catch (err) {
+    } catch (err) {
       throw new InternalServerErrorException('Error creating blog');
+    }
+
+    return blog;
   }
 
-  return blog;
-    
-  }
+  async findAll(page: number, search: string) {
+    const startIndex = (page - 1) * 10;
+    const endIndex = startIndex + 10;
 
-  findAll() {
-    return this.usePostRepository.find();
+    let posts = await this.usePostRepository.find();
+    if (search) {
+      const searchTerm = search.toLowerCase();
+      posts = posts.filter((post) =>
+        post.title.toLowerCase().includes(searchTerm),
+      );
+    }
+    const paginatedPosts = posts.slice(startIndex, endIndex);
+    return {
+      totalPosts: posts.length,
+      totalPages: Math.ceil(posts.length / 10),
+      currentPage: page,
+      posts: paginatedPosts,
+    };
   }
 
   findOne(id: number) {
-      
-    return this.usePostRepository.findOne({where:{id}});
+    return this.usePostRepository.findOne({ where: { id } });
   }
 
   async getUserPost(id: number) {
-
-    return await this.usePostRepository.find({ where: { User:{id:id} } });
+    return await this.usePostRepository.find({ where: { User: { id: id } } });
   }
 
-  async update(id: number, updatePostDto: UpdatePostDto,user:any) {
-   console.log("User id",user);
-    const post = await this.usePostRepository.findOne({where:{id,User:{id:user.id}}});
-    if(!post)
-    {
-      throw new Error("Post not found");
+  async update(id: number, updatePostDto: UpdatePostDto, user: any) {
+    console.log('User id', user);
+    const post = await this.usePostRepository.findOne({
+      where: { id, User: { id: user.id } },
+    });
+    if (!post) {
+      throw new Error('Post not found');
     }
-   
-   
-    if(updatePostDto.image)
-    {
-      const filePath = join(__dirname, '../../','uploads', post.image);
+
+    if (updatePostDto.image) {
+      const filePath = join(__dirname, '../../', 'uploads', post.image);
       console.log('File Path:', filePath);
 
       if (existsSync(filePath)) {
@@ -57,11 +75,11 @@ constructor(@InjectRepository(Post) private readonly usePostRepository:Repositor
         throw new Error('File not found');
       }
     }
-    const updatedPost = await this.usePostRepository.update({id},updatePostDto);
+    const updatedPost = await this.usePostRepository.update(
+      { id },
+      updatePostDto,
+    );
     return updatedPost;
-  
-    
-
   }
 
   async remove(id: number) {
@@ -69,10 +87,10 @@ constructor(@InjectRepository(Post) private readonly usePostRepository:Repositor
       const post = await this.usePostRepository.findOne({ where: { id } });
 
       if (!post) {
-        throw new Error("Post not found");
+        throw new Error('Post not found');
       }
 
-      const filePath = join(__dirname, '../../','uploads', post.image);
+      const filePath = join(__dirname, '../../', 'uploads', post.image);
       console.log('File Path:', filePath);
 
       if (existsSync(filePath)) {

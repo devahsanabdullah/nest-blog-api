@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { PostModule } from './post/post.module';
 import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module';
 import { join } from 'path';
+import { CommentsModule } from './comments/comments.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -21,12 +22,13 @@ import { join } from 'path';
       logging: true,
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '../uploads'), 
-      serveRoot: '/uploads/' 
+      rootPath: join(__dirname, '..', '../uploads'),
+      serveRoot: '/uploads/',
     }),
     UsersModule,
     AuthModule,
     PostModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
