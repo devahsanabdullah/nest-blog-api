@@ -5,8 +5,10 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   BaseEntity,
+  CreateDateColumn,
 } from 'typeorm';
 import { Post } from '../../post/entities/post.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Entity()
 export class Comment extends BaseEntity {
@@ -16,6 +18,10 @@ export class Comment extends BaseEntity {
   @Column()
   message: string;
 
+ @Column()
+ user_id: number;
+
+
   @OneToMany(() => Comment, (reply) => reply.parentComment)
   replies: Comment[];
 
@@ -24,4 +30,9 @@ export class Comment extends BaseEntity {
 
   @ManyToOne(() => Comment, (comment) => comment.replies)
   parentComment: Comment;
+
+  
+  @CreateDateColumn({ type: 'timestamp', nullable: false })
+  created_at: Date;
+ 
 }

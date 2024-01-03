@@ -8,8 +8,6 @@ import { PostModule } from './post/post.module';
 import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module';
 import { join } from 'path';
 import { CommentsModule } from './comments/comments.module';
-import * as dotenv from 'dotenv';
-dotenv.config();
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -26,13 +24,13 @@ dotenv.config();
       }),
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '../uploads'),
-      serveRoot: '/uploads/',
+      rootPath: join(__dirname, '..', '../uploads'), // added ../ to get one folder back
+      serveRoot: '/uploads/' //last slash was important
     }),
     UsersModule,
     AuthModule,
     PostModule,
-    CommentsModule,
+    CommentsModule
   ],
   controllers: [AppController],
   providers: [AppService],

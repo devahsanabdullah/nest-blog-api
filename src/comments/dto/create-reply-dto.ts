@@ -2,11 +2,14 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateReplyDto {
   @IsNotEmpty()
-  messsage: string;
+  message: string;
 
   @IsNotEmpty()
   postId: number;
 
   @IsNotEmpty()
-  commentId: string;
+  commentId: number;
+  
+  @IsNotEmpty()
+  user_id: number;
 }
